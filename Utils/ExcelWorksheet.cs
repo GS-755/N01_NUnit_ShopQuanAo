@@ -5,14 +5,14 @@ namespace N01_NUnit_ShopQuanAo.Utils
     public sealed class ExcelWorksheet : IWorkbook
     {
         public static ExcelWorksheet
-            instance { get; private set; } = new ExcelWorksheet();
+            Instance { get; private set; } = new ExcelWorksheet();
 
-        private Application excelApplication;
-        private Workbook workbook;
+        public Application ExcelApplication { get; set; }
+        public Workbook Workbook { get; set; }
 
         private ExcelWorksheet() {
-            this.excelApplication = new Application();
-            this.workbook = new Workbook();
+            this.ExcelApplication = new Application();
+            this.Workbook = new Workbook();
         }
 
         //Static methods 
@@ -30,15 +30,15 @@ namespace N01_NUnit_ShopQuanAo.Utils
             }
         }
 
-        // After-instance methods
+        // After-Instance methods
         public Workbook OpenWorkbook(string filePath)
         {
             try
             {
-                this.workbook = this.
-                    excelApplication.Workbooks.Open(filePath);
+                this.Workbook = this.
+                    ExcelApplication.Workbooks.Open(filePath);
 
-                return workbook;
+                return Workbook;
             }
             catch(IOException ex)
             {

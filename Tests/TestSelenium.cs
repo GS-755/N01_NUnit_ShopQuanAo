@@ -1,14 +1,8 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Edge;
-using N01_NUnit_ShopQuanAo.Models;
-using N01_NUnit_ShopQuanAo.Interfaces;
-using System.Diagnostics.CodeAnalysis;
-
-namespace N01_NUnit_ShopQuanAo.Tests
+﻿namespace N01_NUnit_ShopQuanAo.Tests
 {
     public class TestSelenium
     {
-        private EdgeDriver driver;
+        private IWebDriver driver;
         [AllowNull]
         //để gán return của FindElement(By.xxx);
         private IWebElement expected; 
@@ -21,6 +15,7 @@ namespace N01_NUnit_ShopQuanAo.Tests
             // Cách sử dụng IShopQuanAo: 
             // (có thể thay thế CartItem bằng bất kỳ class nào)
             this.actual = new CartItem();
+            // Thay EdgeDriver thành driver đang sử dụng :) 
             this.driver = new EdgeDriver();
             this.driver.Manage().Window.Maximize();
             this.driver.Navigate().GoToUrl("https://microsoft.com");

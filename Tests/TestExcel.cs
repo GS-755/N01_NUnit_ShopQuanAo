@@ -1,22 +1,22 @@
-﻿using N01_NUnit_ShopQuanAo.Models;
-
-namespace N01_NUnit_ShopQuanAo.Tests
+﻿namespace N01_NUnit_ShopQuanAo.Tests
 {
     public class TestExcel
     {
+        private Application excelApplication;
+        private Workbook workbook;
+
         [SetUp]
         public void Setup()
         {
-            Application application = new Application();
-            Workbook workbook = new Workbook();
-            Mmenu mmenu = new Mmenu();
-            mmenu.();
+            this.excelApplication = ExcelWorksheet.
+                Instance.ExcelApplication;
+            this.workbook = new Workbook();
         }
 
         [Test]
-        public void TestOpen()
+        public void TestExcelBinaries()
         {
-            Assert.Pass();
+            Assert.That(this.excelApplication != null);
         }
     }
 }
