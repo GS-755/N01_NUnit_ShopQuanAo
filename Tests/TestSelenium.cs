@@ -2,30 +2,34 @@
 {
     public class TestSelenium
     {
+        #pragma warning disable NUnit1032 // An IDisposable field/property should be Disposed in a TearDown method
         private IWebDriver driver;
+
         [AllowNull]
         //để gán return của FindElement(By.xxx);
         private IWebElement expected; 
         [AllowNull]
-        private IShopQuanAo actual;
+        private IWebElement actual;
 
         [SetUp]
         public void Setup()
         {
-            // Cách sử dụng IShopQuanAo: 
-            // (có thể thay thế CartItem bằng bất kỳ class nào)
-            this.actual = new CartItem();
             // Thay EdgeDriver thành driver đang sử dụng :) 
             this.driver = new EdgeDriver();
             this.driver.Manage().Window.Maximize();
             this.driver.Navigate().GoToUrl("https://microsoft.com");
-            this.driver.Quit();
         }
 
         [Test]
+        [TearDown]
         public void TestWebDriver()
         {
+            this.CloseBrowser();
             Assert.That(this.driver != null);
+        }
+
+        public void CloseBrowser() {
+            this.driver.Quit();
         }
     }
 }
