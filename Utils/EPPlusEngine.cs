@@ -1,22 +1,36 @@
+﻿using OfficeOpenXml;
+
 namespace N01_NUnit_ShopQuanAo.Utils
 {
-    using OfficeOpenXml;
-    
     public class EPPlusEngine
     {
-        public static string ReadExcelFile(string filePath, string workSheet, int x, int y)
+        private FileInfo _FileInfo { get; set; }
+        public ExcelPackage _ExcelPackage { get; set; }
+        public ExcelWorksheet _ExcelWorksheet { get; set; }
+
+        public EPPlusEngine(string filePath, string sheetName)
         {
-            string data = "";
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            this._FileInfo = new FileInfo(Path.GetFullPath(filePath));
+            this._ExcelPackage = new ExcelPackage(this._FileInfo);
+            this._ExcelWorksheet = this._ExcelPackage.Workbook.Worksheets[sheetName];
+        }
+
+        public int RowCount
+        {
+            get => this._ExcelWorksheet.Dimension.End.Column;
+        }
+        public int ColumnCount
+        {
+            get => this._ExcelWorksheet.Dimension.End.Row;
+        }
+
+        public string ReadExcelFile(int row, int col)
+        {
+            string data = string.Empty;
             try
             {
-                FileInfo existingFile = new FileInfo(filePath);
-                using (ExcelPackage package = new ExcelPackage(existingFile))
-                {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[workSheet];
-                    // int colCount = worksheet.Dimension.End.Column;
-                    // int rowCount = worksheet.Dimension.End.Row;
-                    data = worksheet.Cells[x, y].Value?.ToString();
-                }
+                data = this._ExcelWorksheet.Cells[row, col].Value?.ToString();
             }
             catch (Exception ex)
             {
@@ -25,18 +39,16 @@ namespace N01_NUnit_ShopQuanAo.Utils
 
             return data;
         }
-        public static void WriteExcelFile(string filePath, string workSheet, Object data, int x, int y)
+        public void WriteExcelFile(Object data, int row, int col)
         {
-            FileInfo existingFile = new FileInfo(filePath);
-            using (ExcelPackage package = new ExcelPackage(existingFile))
+            try
             {
-                //get the first worksheet in the workbook
-                ExcelWorksheet worksheet = package.Workbook.Worksheets[workSheet];
-                // int colCount = worksheet.Dimension.End.Column;
-                // int rowCount = worksheet.Dimension.End.Row;
-                worksheet.Cells[x, y].Value = data;
-
-                package.SaveAsync();
+                this._ExcelWorksheet.Cells[row, col].Value = data;
+                this._ExcelPackage.SaveAsync();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
     }

@@ -2,9 +2,11 @@
 {
     public class HomeLoginSelenium
     {
-        private readonly int COL = 8;
-        private readonly string WORKSHEET_NAME = "Đăng nhập";
-        private readonly string FILE_PATH = @"E:\HUFLIT\BDCLPM\doan\N01_NUnit_ShopQuanAo\Tests\Out";
+        private readonly int COL_WRITE_ANS = 8;
+        private readonly string INP_WORKSHEET_NAME = "DataDangNhap";
+        private readonly string OUT_WORKSHEET_NAME = "Đăng nhập";
+        private readonly string FILE_PATH = Path.GetFullPath("..\\..\\..\\Tests\\Out\\N01_TestCase.xlsx");
+        private readonly string WEB_URL = "http://localhost:22222";
 
         #pragma warning disable NUnit1032 // An IDisposable field/property should be Disposed in a TearDown method
         private IWebDriver driver;
@@ -18,10 +20,17 @@
         public void Setup()
         {
             // Thay EdgeDriver thành driver đang sử dụng :) 
-            this.driver = new EdgeDriver();
+            this.driver = new ChromeDriver();
             this.driver.Manage().Window.Maximize();
-            this.driver.Navigate().GoToUrl("http://localhost:22222");
+            this.driver.Navigate().GoToUrl(this.WEB_URL);
         }
+
+        [TearDown]
+        public void TearDown()
+        {
+            this.driver.Quit();
+        }
+
         [Test]
         [TestCase("[Đăng nhập_1]", "fifai", "8732441", "Đăng nhập thành công", 10, 8)]
         [TestCase("[Đăng nhập_2]", "abc000", "0900009900", "Tên đăng nhập không tồn tại", 11, 8)]
@@ -63,6 +72,7 @@
         public void DangNhap_ActorKhachHang(string testId, string userName,
                                     string password, string expected, int x, int y)
         {
+            EPPlusEngine excelEngine = new EPPlusEngine(this.FILE_PATH, this.OUT_WORKSHEET_NAME);
             try
             {
                 // 1. Click "Đăng nhập" trên Navbar
@@ -92,20 +102,22 @@
                 if(testResult) {
                     strTestResult = "Pass";
                 }
-                else {
+                else if(!testResult)
+                {
                     strTestResult = "Fail";
                 }
-                EPPlusEngine.WriteExcelFile(FILE_PATH, WORKSHEET_NAME, strTestResult, x, y);
+                else 
+                {
+                    strTestResult = "Fail";
+                }
+                excelEngine.WriteExcelFile(strTestResult, x, y);
                 Assert.That(testResult);
-                // 5. Tắt trình duyệt
-                this.driver.Close();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                EPPlusEngine.WriteExcelFile(FILE_PATH, WORKSHEET_NAME, ex.Message, x, y);
+                excelEngine.WriteExcelFile("N/A", x, y);
 
-                this.driver.Quit();
+                Assert.Fail(ex.Message);
             }
         }
     }
