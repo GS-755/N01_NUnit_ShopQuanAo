@@ -1,6 +1,7 @@
 // -- .NET-based using start -- 
 global using System;
 global using System.Linq;
+global using System.Threading;
 global using NUnit.Framework;
 global using System.Collections.Generic;
 global using Microsoft.Office.Interop.Excel;
@@ -9,6 +10,7 @@ global using Microsoft.Office.Interop.Excel;
 // -- Selenium using start 
 global using OpenQA.Selenium;
 global using OpenQA.Selenium.Edge;
+global using OpenQA.Selenium.Chrome;
 global using System.Diagnostics.CodeAnalysis;
 // -- Selenium using end
 
